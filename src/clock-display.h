@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <clock-display.cpp>
 
- 
+
 //function that sets up the display for the time
 class Display{
     public:
