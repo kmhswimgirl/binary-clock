@@ -1,26 +1,37 @@
 #include <Arduino.h>
-#include <clock-display.h>
 #include <WiFi.h>
 #include <time.h>
 #include <esp_sntp.h>
+#include <wifi-creds.h> 
 
-const char *ssid = "YOUR_SSID";
-const char *password = "YOUR_PASS";
+/*
+In order to set up wifi network name and passwords correctly:
+1. create the header file wifi-creds.h
+2. copy and paste this snippet of code:
+
+    #include <arduino.h>
+
+    class wifiPass{
+
+      public:
+        const char *network = "put your network name here";
+        const char *password = "put network password here";
+    }; 
+3. add header file name to the .gitignore so you do not share your wifi password on GitHub.
+*/
+
+wifiPass creds;
+
+const char *ssid = creds.network;
+const char *password = creds.password;
 
 const char *ntpServer1 = "pool.ntp.org";
 const char *ntpServer2 = "time.nist.gov";
 const long gmtOffset_sec = 3600;
 const int daylightOffset_sec = 3600;
+#define TZ_America_New_York	PSTR("EST5EDT,M3.2.0,M11.1.0")
 
-const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3";  // TimeZone rule for Europe/Rome including daylight adjustment rules (optional)
-
- //new branch -- config
-void setup() {
-  // analog pin
-
-  //setting the other pins
-  
-}
+const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3"; 
 
 
 void printLocalTime() {
@@ -45,14 +56,6 @@ void setup() {
   Serial.printf("Connecting to %s ", ssid);
   WiFi.begin(ssid, password);
 
-  /**
-   * NTP server address could be acquired via DHCP,
-   *
-   * NOTE: This call should be made BEFORE esp32 acquires IP address via DHCP,
-   * otherwise SNTP option 42 would be rejected by default.
-   * NOTE: configTime() function call if made AFTER DHCP-client run
-   * will OVERRIDE acquired NTP server address
-   */
   esp_sntp_servermode_dhcp(1);  // (optional)
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -61,22 +64,11 @@ void setup() {
   }
   Serial.println(" CONNECTED");
 
-  // set notification call-back function
   sntp_set_time_sync_notification_cb(timeavailable);
 
-  /**
-   * This will set configured ntp servers and constant TimeZone/daylightOffset
-   * should be OK if your time zone does not need to adjust daylightOffset twice a year,
-   * in such a case time adjustment won't be handled automagically.
-   */
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1, ntpServer2);
-
-  /**
-   * A more convenient approach to handle TimeZones with daylightOffset
-   * would be to specify a environment variable with TimeZone definition including daylight adjustmnet rules.
-   * A list of rules for your zone could be obtained from https://github.com/esp8266/Arduino/blob/master/cores/esp8266/TZ.h
-   */
-  //configTzTime(time_zone, ntpServer1, ntpServer2);
+   
+  configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 }
 
 void loop() {
