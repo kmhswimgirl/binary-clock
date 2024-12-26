@@ -20,8 +20,17 @@
 #define D3 22
 #define D4 23 
 
+//2D array that describes the location of each pin 
+uint8_t pins[4][4] = {
+    {A1, A2, 0, 0},
+    {B1, B2, B3, B4},
+    {C1, C2, C3, 0},
+    {D1, D2, D3, D4}
+};
+
 //Used to initialize all of the pin connections for the clock
 void Display::init(){
+
     //A Pins Setup
     pinMode(A1, OUTPUT); 
     pinMode(A2, OUTPUT);
@@ -45,20 +54,8 @@ void Display::init(){
 
     Serial.print("Pins initialized");
 };
-/*
-    Function: displays a binary digit in the desired column
-   
-*/
 
 void Display::displayDigit(uint8_t column,  int number){
-
-    //2D array for mapping the pins, 
-    uint8_t pins[4][4] = {
-        {A1, A2, 0, 0},
-        {B1, B2, B3, B4},
-        {C1, C2, C3, 0},
-        {D1, D2, D3, D4}
-    };
 
     switch(number){
         case 0: 
@@ -133,6 +130,13 @@ void Display::displayDigit(uint8_t column,  int number){
     };
 };
 
-
-
-
+void Display::testLED(char ledNum){
+    digitalWrite(ledNum, HIGH);
+    delay(200);
+    digitalWrite(ledNum, LOW);
+    delay(200);
+};
+//eventually will write a for loop animation or two for fun
+void Display::booting(){
+   
+};

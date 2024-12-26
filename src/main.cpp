@@ -80,8 +80,6 @@ void setup() {
    
   configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 
- 
-
 }
 
 void loop() {

@@ -5,18 +5,26 @@
 
 
 class Display{
-    public:
-     //initializes LED Pins to OUTPUT
-     void init();
+ public:
 
-     //displays a specific digit in each column
-     void displayDigit( uint8_t column, int number);
+    //Initializes all of the 13 LED pins to OUTPUT
+    void init();
 
-     // toggles if the display is using 24 hr or common time
-     bool is24hr();
+    /**
+     * Displays a binary digit in the desired column by writing the correct pins to HIGH
+        @param column enter 0-3 for columns A-D on the schematic
+        @param number this is the number (0-9) that will be displayed in the desired column
+    */
+    void displayDigit(uint8_t column, int number);
 
-     //displays loading LED animation
-     void loadingPhase();
+    /**
+     * writes a single pin to blink in order to test electrical wiring functionality
+        @param ledNum the alphanumeric code assigned to each LED to blink it
+    */
+    void testLED(char ledNum);
+
+    //displays loading LED animation
+    void booting();
 
 };
 
