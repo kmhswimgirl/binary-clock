@@ -1,28 +1,27 @@
-// #ifndef BINARY_CLOCK
-// #define BINARY_CLOCK
-// #include <Arduino.h>
-// #include <clock-display.cpp>
+#ifndef BINARY_CLOCK
+#define BINARY_CLOCK
+#include <Arduino.h>
 
-//  //new branch -- config
-// //function that sets up the display for the time
-// class Display{
-//     public:
-//         //displays the current time on the clock
-//         void displayTime(int);
+ //new branch -- config
+//function that sets up the display for the time
+class Display{
+    public:
 
-//         // toggles if the display is using 24 hr or common time
-//         bool is24hr();
+     void init();
 
-//         //displays loading LED animation
-//         void loadingPhase();
+     //displays the current time on the clock
+     void displayDigit( uint8_t , int);
 
-//         //test function to light certain LED
-//         void testLED(int, int);
+      // toggles if the display is using 24 hr or common time
+      bool is24hr();
+
+     //displays loading LED animation
+     void loadingPhase();
+
+     //test function to light certain LED
+     void testLED(int, int);
 
 
-//     private:
+};
 
-
-// };
-
-// #endif
+#endif
