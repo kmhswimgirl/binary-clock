@@ -5,39 +5,21 @@
 #include <wifi-creds.h> 
 #include <clock-display.h>
 
-//pin definitons for each LED
-#define A1 27
-#define A2 12
-
-#define B1 13
-#define B2 33
-#define B3 26
-#define B4 25
-
-#define C1 16
-#define C2 2
-#define C3 4
-
-#define D1 19
-#define D2 18
-#define D3 22
-#define D4 23 
-
-
 /*
 In order to set up wifi network name and passwords correctly:
 1. create the header file wifi-creds.h
 2. copy and paste this snippet of code:
 
-    #include <arduino.h>
+  #include <arduino.h>
 
-    class wifiPass{
+  class wifiPass{
 
-      public:
-        const char *network = "put your network name here";
-        const char *password = "put network password here";
-    }; 
-3. add header file name to the .gitignore so you do not share your wifi password on GitHub.
+    public:
+      const char *network = "put your network name here";
+      const char *password = "put network password here";
+  }; 
+
+3. add header file name to the .gitignore so you do not share your wifi password(s) on GitHub.
 */
 
 wifiPass creds;
@@ -58,7 +40,7 @@ const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3";
 void printLocalTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
-    //Serial.println("No time available (yet)");
+    Serial.println("No time available (yet)");
     return;
   }
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
@@ -71,7 +53,11 @@ void timeavailable(struct timeval *t) {
 }
 
 void setup() {
+  //initialize Serial Monitor
   Serial.begin(115200);
+  //initialize LED Pins
+  display.init();
+
   //get rid of serial monitor garbage
   pinMode(15, INPUT_PULLDOWN);
   digitalWrite(15, LOW);
@@ -94,15 +80,14 @@ void setup() {
    
   configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 
-  display.init();
+ 
 
 }
 
-
 void loop() {
   delay(5000);
-  printLocalTime();  // it will take some time to sync time :)
-  digitalWrite(A1, HIGH);
-  digitalWrite(C2, HIGH);
+  printLocalTime();  
+  display.displayDigit(1,0);
+  display.displayDigit(3,0);
 }
 

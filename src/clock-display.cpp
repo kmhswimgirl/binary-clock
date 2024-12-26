@@ -45,11 +45,14 @@ void Display::init(){
 
     Serial.print("Pins initialized");
 };
+/*
+    Function: displays a binary digit in the desired column
+   
+*/
 
 void Display::displayDigit(uint8_t column,  int number){
-    
 
-    //2D array for mapping the pins
+    //2D array for mapping the pins, 
     uint8_t pins[4][4] = {
         {A1, A2, 0, 0},
         {B1, B2, B3, B4},
@@ -58,8 +61,74 @@ void Display::displayDigit(uint8_t column,  int number){
     };
 
     switch(number){
-        case 0:
-         digitalWrite(pins[1][1], HIGH);
+        case 0: 
+         digitalWrite(pins[column][0], LOW);
+         digitalWrite(pins[column][1], LOW);
+         digitalWrite(pins[column][2], LOW);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 1: 
+         digitalWrite(pins[column][0], HIGH);
+         digitalWrite(pins[column][1], LOW);
+         digitalWrite(pins[column][2], LOW);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 2:
+         digitalWrite(pins[column][0], LOW);
+         digitalWrite(pins[column][1], HIGH);
+         digitalWrite(pins[column][2], LOW);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 3:
+         digitalWrite(pins[column][0], HIGH);
+         digitalWrite(pins[column][1], HIGH);
+         digitalWrite(pins[column][2], LOW);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 4:
+         digitalWrite(pins[column][0], LOW);
+         digitalWrite(pins[column][1], LOW);
+         digitalWrite(pins[column][2], HIGH);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 5:
+         digitalWrite(pins[column][0], HIGH);
+         digitalWrite(pins[column][1], LOW);
+         digitalWrite(pins[column][2], HIGH);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 6:
+         digitalWrite(pins[column][0], LOW);
+         digitalWrite(pins[column][1], HIGH);
+         digitalWrite(pins[column][2], HIGH);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 7:
+         digitalWrite(pins[column][0], HIGH);
+         digitalWrite(pins[column][1], HIGH);
+         digitalWrite(pins[column][2], HIGH);
+         digitalWrite(pins[column][3], LOW);
+        break;
+
+        case 8: 
+         digitalWrite(pins[column][0], LOW);
+         digitalWrite(pins[column][1], LOW);
+         digitalWrite(pins[column][2], LOW);
+         digitalWrite(pins[column][3], HIGH);
+        break;
+
+        case 9: 
+         digitalWrite(pins[column][0], HIGH);
+         digitalWrite(pins[column][1], LOW);
+         digitalWrite(pins[column][2], LOW);
+         digitalWrite(pins[column][3], HIGH);
         break;
     };
 };
