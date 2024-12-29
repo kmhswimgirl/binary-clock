@@ -3,28 +3,34 @@
 #include <time.h>
 #include <esp_sntp.h>
 #include <wifi-creds.h> 
+#include <clock-display.h>
 
 /*
 In order to set up wifi network name and passwords correctly:
 1. create the header file wifi-creds.h
 2. copy and paste this snippet of code:
 
-    #include <arduino.h>
+  #include <arduino.h>
 
-    class wifiPass{
+  class wifiPass{
 
-      public:
-        const char *network = "put your network name here";
-        const char *password = "put network password here";
-    }; 
-3. add header file name to the .gitignore so you do not share your wifi password on GitHub.
+    public:
+      const char *network = "put your network name here";
+      const char *password = "put network password here";
+  }; 
+
+3. add header file name to the .gitignore so you do not share your wifi password(s) on GitHub.
 */
 
+//creating objects
 wifiPass creds;
+Display display;
 
+//Wi-fi setup
 const char *ssid = creds.network;
 const char *password = creds.password;
 
+//NTP server setup
 const char *ntpServer1 = "pool.ntp.org";
 const char *ntpServer2 = "time.nist.gov";
 const long gmtOffset_sec = 3600;
@@ -41,16 +47,37 @@ void printLocalTime() {
     return;
   }
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-}
+  int ntpHour = timeinfo.tm_hour;
+  int ntpMin = timeinfo.tm_min;
+};
+
+void setCurrentTime(){
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("No time available (yet)");
+    return;
+  }
+  Serial.println("Time variables");
+  char timeHour[3];
+  char timeMin[3];
+  strftime(timeHour,3, "%H", &timeinfo);
+  Serial.println(timeHour);
+  strftime(timeMin,3, "%M", &timeinfo);
+  Serial.println(timeMin);
+};
 
 // Callback function (gets called when time adjusts via NTP)
 void timeavailable(struct timeval *t) {
   Serial.println("Got time adjustment from NTP!");
   printLocalTime();
+  setCurrentTime();
 }
 
 void setup() {
+  //initialize Serial Monitor
   Serial.begin(115200);
+  //initialize LED Pins
+  display.init();
 
   // First step is to configure WiFi STA and connect in order to get the current time and date.
   Serial.printf("Connecting to %s ", ssid);
@@ -69,10 +96,13 @@ void setup() {
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1, ntpServer2);
    
   configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
+
 }
 
 void loop() {
   delay(5000);
-  printLocalTime();  // it will take some time to sync time :)
+  printLocalTime();  
+  setCurrentTime();
+  //display.updateTime(ntpHour, ntpMin);
 }
 

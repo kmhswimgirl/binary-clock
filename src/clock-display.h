@@ -1,28 +1,49 @@
-// #ifndef BINARY_CLOCK
-// #define BINARY_CLOCK
-// #include <Arduino.h>
-// #include <clock-display.cpp>
+#ifndef BINARY_CLOCK
+#define BINARY_CLOCK
+#include <Arduino.h>
 
-//  //new branch -- config
-// //function that sets up the display for the time
-// class Display{
-//     public:
-//         //displays the current time on the clock
-//         void displayTime(int);
+//pin definitons for each LED
+#define A1 27
+#define A2 12
 
-//         // toggles if the display is using 24 hr or common time
-//         bool is24hr();
+#define B1 13
+#define B2 33
+#define B3 26
+#define B4 25
 
-//         //displays loading LED animation
-//         void loadingPhase();
+#define C1 16
+#define C2 2
+#define C3 4
 
-//         //test function to light certain LED
-//         void testLED(int, int);
+#define D1 19
+#define D2 18
+#define D3 22
+#define D4 23 
 
+class Display{
+ public:
 
-//     private:
+    //Initializes all of the 13 LED pins to OUTPUT
+    void init();
 
+    /**
+     * Displays a binary digit in the desired column by writing the correct pins to HIGH
+        @param column enter 0-3 for columns A-D on the schematic
+        @param number this is the number (0-9) that will be displayed in the desired column
+    */
+    void displayDigit(uint8_t column, int number);
 
-// };
+    /**
+     * writes a single pin to blink in order to test electrical wiring functionality
+        @param ledNum the alphanumeric code assigned to each LED to blink it
+    */
+    void testLED(uint8_t ledNum);
 
-// #endif
+    //displays loading LED animation
+    void booting();
+
+    //updates the display using the current time 
+    void updateTime(int currHour, int currMin);
+};
+
+#endif
