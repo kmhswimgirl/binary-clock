@@ -2,7 +2,23 @@
 #define BINARY_CLOCK
 #include <Arduino.h>
 
+//pin definitons for each LED
+#define A1 27
+#define A2 12
 
+#define B1 13
+#define B2 33
+#define B3 26
+#define B4 25
+
+#define C1 16
+#define C2 2
+#define C3 4
+
+#define D1 19
+#define D2 18
+#define D3 22
+#define D4 23 
 
 class Display{
  public:
@@ -21,11 +37,13 @@ class Display{
      * writes a single pin to blink in order to test electrical wiring functionality
         @param ledNum the alphanumeric code assigned to each LED to blink it
     */
-    void testLED(char ledNum);
+    void testLED(uint8_t ledNum);
 
     //displays loading LED animation
     void booting();
 
+    //updates the display using the current time 
+    void updateTime(int currHour, int currMin);
 };
 
 #endif

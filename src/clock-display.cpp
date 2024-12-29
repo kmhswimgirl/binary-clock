@@ -2,24 +2,6 @@
 #include <clock-display.h>
 #include <iostream>
 
-//pin definitons for each LED
-#define A1 27
-#define A2 12
-
-#define B1 13
-#define B2 33
-#define B3 26
-#define B4 25
-
-#define C1 16
-#define C2 2
-#define C3 4
-
-#define D1 19
-#define D2 18
-#define D3 22
-#define D4 23 
-
 //2D array that describes the location of each pin 
 uint8_t pins[4][4] = {
     {A1, A2, 0, 0},
@@ -53,6 +35,7 @@ void Display::init(){
     pinMode(D4, OUTPUT);
 
     Serial.print("Pins initialized");
+
 };
 
 void Display::displayDigit(uint8_t column,  int number){
@@ -130,13 +113,52 @@ void Display::displayDigit(uint8_t column,  int number){
     };
 };
 
-void Display::testLED(char ledNum){
+void Display::testLED(u_int8_t ledNum){
+
     digitalWrite(ledNum, HIGH);
     delay(200);
     digitalWrite(ledNum, LOW);
     delay(200);
 };
-//eventually will write a for loop animation or two for fun
+
 void Display::booting(){
-   
+   testLED(A1);
+   testLED(A2);
+
+   testLED(B1);
+   testLED(B2);
+   testLED(B3);
+   testLED(B4);
+
+   testLED(C1);
+   testLED(C2);
+   testLED(C3);
+
+   testLED(D1);
+   testLED(D2);
+   testLED(D3);
+   testLED(D4);
+
+   delay(1000);
+};
+
+void Display::updateTime(int currHour, int currMin){
+
+    //calculate values to be displayed
+    int firstHourDigit = currHour / 10;
+    int secondHourDigit = currHour % 10;
+    int firstMinDigit = currMin /10;
+    int secondMinDigit = currMin % 10;
+
+    //set column A
+    displayDigit(0,firstHourDigit);
+
+    //set column B
+    displayDigit(1,secondHourDigit);
+
+    //set column C
+    displayDigit(2, firstMinDigit);
+
+    //set column D
+    displayDigit(3, secondMinDigit);
 };

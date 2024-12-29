@@ -22,12 +22,15 @@ In order to set up wifi network name and passwords correctly:
 3. add header file name to the .gitignore so you do not share your wifi password(s) on GitHub.
 */
 
+//creating objects
 wifiPass creds;
 Display display;
 
+//Wi-fi setup
 const char *ssid = creds.network;
 const char *password = creds.password;
 
+//NTP server setup
 const char *ntpServer1 = "pool.ntp.org";
 const char *ntpServer2 = "time.nist.gov";
 const long gmtOffset_sec = 3600;
@@ -44,12 +47,30 @@ void printLocalTime() {
     return;
   }
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-}
+  int ntpHour = timeinfo.tm_hour;
+  int ntpMin = timeinfo.tm_min;
+};
+
+void setCurrentTime(){
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("No time available (yet)");
+    return;
+  }
+  Serial.println("Time variables");
+  char timeHour[3];
+  char timeMin[3];
+  strftime(timeHour,3, "%H", &timeinfo);
+  Serial.println(timeHour);
+  strftime(timeMin,3, "%M", &timeinfo);
+  Serial.println(timeMin);
+};
 
 // Callback function (gets called when time adjusts via NTP)
 void timeavailable(struct timeval *t) {
   Serial.println("Got time adjustment from NTP!");
   printLocalTime();
+  setCurrentTime();
 }
 
 void setup() {
@@ -57,10 +78,6 @@ void setup() {
   Serial.begin(115200);
   //initialize LED Pins
   display.init();
-
-  //get rid of serial monitor garbage
-  pinMode(15, INPUT_PULLDOWN);
-  digitalWrite(15, LOW);
 
   // First step is to configure WiFi STA and connect in order to get the current time and date.
   Serial.printf("Connecting to %s ", ssid);
@@ -70,7 +87,7 @@ void setup() {
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    //Serial.print(".");
+    Serial.print(".");
   }
   Serial.println(" CONNECTED");
 
@@ -85,7 +102,7 @@ void setup() {
 void loop() {
   delay(5000);
   printLocalTime();  
-  display.displayDigit(1,0);
-  display.displayDigit(3,0);
+  setCurrentTime();
+  //display.updateTime(ntpHour, ntpMin);
 }
 
