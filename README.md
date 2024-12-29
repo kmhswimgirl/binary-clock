@@ -30,7 +30,7 @@ Basic Working LED binary clock with no additional features.
 - Is able to show connected/not connected states using a loading LED animation
 - can automatically reconnect to wi-fi if disconnected
 
-### Wiring Schematic (main board only):
-NB: each LED has a 220 ohm resistor connected to it, which will later be increased to further dim the LEDs as they are very bright at the moment. 
+### Wiring Schematic (main protoboard only):
 <img width="700" alt="Screenshot 2024-12-24 at 02 27 55" src="https://github.com/user-attachments/assets/972d5872-cb4c-4f9f-9be7-d79a7f309d89" />
-** used this for some basic PCB design practice too
+<br/>
+Note: each LED has a 220 ohm resistor connected to it, which will later be increased to further dim the LEDs as they are very bright at the moment. I also used this for some PCB/ KiCad practice
