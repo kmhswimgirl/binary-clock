@@ -39,10 +39,14 @@ class Display{
     */
     void testLED(uint8_t ledNum);
 
-    //displays loading LED animation
+    //Blinks each LED as ESP32 is connecting to local Wi-Fi
     void booting();
 
-    //updates the display using the current time 
+    /**
+     *  updates the time by taking in an hour and minute integer value. 
+        @param currHour the current hour as an integer
+        @param currMin the current minute as an integer
+    */
     void updateTime(int currHour, int currMin);
 };
 

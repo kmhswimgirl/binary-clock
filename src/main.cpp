@@ -39,8 +39,9 @@ const int daylightOffset_sec = 3600;
 
 const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3"; 
 
-  char timeHour[3];
-  char timeMin[3];
+//arrays that store current hour & minute values
+char timeHour[3];
+char timeMin[3];
 
 void printLocalTime() {
   struct tm timeinfo;
@@ -83,8 +84,9 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    display.booting();
   }
-  Serial.println(" CONNECTED");
+  Serial.println(" CONNECTED"); //connected to wi-fi, yay!
 
   sntp_set_time_sync_notification_cb(timeavailable);
 
@@ -96,14 +98,18 @@ void setup() {
 
 void loop() {
   delay(5000);
+
+  //check what the NTP server is returning
   printLocalTime();  
+
+  //extract data from the most current NTP time and store it in arrays
   setCurrentTime();
 
   //convert arrays to integers
   int hour = atoi(timeHour);
   int minute = atoi(timeMin);
-  Serial.println();
-  
+
+  //update LED display with the current time
   display.updateTime(hour, minute);
 }
 
