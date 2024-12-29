@@ -39,6 +39,8 @@ const int daylightOffset_sec = 3600;
 
 const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3"; 
 
+  char timeHour[3];
+  char timeMin[3];
 
 void printLocalTime() {
   struct tm timeinfo;
@@ -47,8 +49,6 @@ void printLocalTime() {
     return;
   }
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-  int ntpHour = timeinfo.tm_hour;
-  int ntpMin = timeinfo.tm_min;
 };
 
 void setCurrentTime(){
@@ -57,13 +57,8 @@ void setCurrentTime(){
     Serial.println("No time available (yet)");
     return;
   }
-  Serial.println("Time variables");
-  char timeHour[3];
-  char timeMin[3];
   strftime(timeHour,3, "%H", &timeinfo);
-  Serial.println(timeHour);
   strftime(timeMin,3, "%M", &timeinfo);
-  Serial.println(timeMin);
 };
 
 // Callback function (gets called when time adjusts via NTP)
@@ -103,6 +98,12 @@ void loop() {
   delay(5000);
   printLocalTime();  
   setCurrentTime();
-  //display.updateTime(ntpHour, ntpMin);
+
+  //convert arrays to integers
+  int hour = atoi(timeHour);
+  int minute = atoi(timeMin);
+  Serial.println();
+  
+  display.updateTime(hour, minute);
 }
 
