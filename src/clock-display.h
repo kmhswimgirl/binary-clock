@@ -17,7 +17,7 @@
 
 #define D1 19
 #define D2 18
-#define D3 22
+#define D3 22 //need to replace due to OLED display
 #define D4 23 
 
 class Display{
