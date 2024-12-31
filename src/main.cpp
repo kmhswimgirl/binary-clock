@@ -100,7 +100,7 @@ void loop() {
   delay(5000);
 
   //check what the NTP server is returning
-  printLocalTime();  
+  printLocalTime(); 
 
   //extract data from the most current NTP time and store it in arrays
   setCurrentTime();
@@ -112,4 +112,3 @@ void loop() {
   //update LED display with the current time
   display.updateTime(hour, minute);
 }
-
