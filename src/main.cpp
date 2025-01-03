@@ -2,9 +2,10 @@
 #include <WiFi.h>
 #include <time.h>
 #include <esp_sntp.h>
-#include <wifi-creds.h> 
 #include <clock-display.h>
+#include <soc/rtc_cntl_reg.h>
 
+#include <wifi-creds.h> 
 /*
 In order to set up wifi network name and passwords correctly:
 1. create the header file wifi-creds.h
@@ -30,13 +31,16 @@ Display display;
 const char *ssid = creds.network;
 const char *password = creds.password;
 
+//setting up the potentiometer to dim the LEDs
+#define DIMMER 35
+int brightness;
+
 //NTP server setup
 const char *ntpServer1 = "pool.ntp.org";
 const char *ntpServer2 = "time.nist.gov";
 const long gmtOffset_sec = 3600;
 const int daylightOffset_sec = 3600;
 #define TZ_America_New_York	PSTR("EST5EDT,M3.2.0,M11.1.0")
-
 const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3"; 
 
 //arrays that store current hour & minute values
@@ -67,13 +71,27 @@ void timeavailable(struct timeval *t) {
   Serial.println("Got time adjustment from NTP!");
   printLocalTime();
   setCurrentTime();
-}
+};
+
+void getPotInput(){
+  int potRead = analogRead(DIMMER);
+  brightness = potRead / 18.2;
+
+  Serial.println(brightness);
+};
 
 void setup() {
+  //disable ESP brownout message
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+
   //initialize Serial Monitor
   Serial.begin(115200);
+
   //initialize LED Pins
   display.init();
+
+  //initalize potentiometer pin (Make sure the Vcc pin is connected to 3v3 on the ESP!!!)
+  pinMode(DIMMER, ANALOG);
 
   // First step is to configure WiFi STA and connect in order to get the current time and date.
   Serial.printf("Connecting to %s ", ssid);
@@ -91,13 +109,12 @@ void setup() {
   sntp_set_time_sync_notification_cb(timeavailable);
 
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1, ntpServer2);
-   
-  configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 
+  configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 }
 
 void loop() {
-  delay(5000);
+  delay(5000); //eventually replace with non blocking code (millis function)
 
   //check what the NTP server is returning
   printLocalTime(); 
@@ -105,10 +122,16 @@ void loop() {
   //extract data from the most current NTP time and store it in arrays
   setCurrentTime();
 
+  //get potentiometer brightness
+  getPotInput();
+
   //convert arrays to integers
   int hour = atoi(timeHour);
   int minute = atoi(timeMin);
 
   //update LED display with the current time
-  display.updateTime(hour, minute);
+  display.updateTime(hour, minute, brightness);
+
+  //return ESP MAC Address
+  //Serial.println(WiFi.macAddress());
 }

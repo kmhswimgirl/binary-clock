@@ -30,8 +30,9 @@ class Display{
      * Displays a binary digit in the desired column by writing the correct pins to HIGH
         @param column enter 0-3 for columns A-D on the schematic
         @param number this is the number (0-9) that will be displayed in the desired column
+        @param pot_value converted value from a potentiometer controllng the brightness of the LEDs
     */
-    void displayDigit(uint8_t column, int number);
+    void displayDigit(uint8_t column, int number, int pot_value);
 
     /**
      * writes a single pin to blink in order to test electrical wiring functionality
@@ -47,7 +48,7 @@ class Display{
         @param currHour the current hour as an integer
         @param currMin the current minute as an integer
     */
-    void updateTime(int currHour, int currMin);
+    void updateTime(int currHour, int currMin, int pot_value);
 };
 
 #endif
