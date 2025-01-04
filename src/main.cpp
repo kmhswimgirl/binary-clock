@@ -4,6 +4,8 @@
 #include <esp_sntp.h>
 #include <clock-display.h>
 #include <soc/rtc_cntl_reg.h>
+#include <Adafruit_I2CDevice.h>
+#include <SPI.h>
 
 #include <wifi-creds.h> 
 /*
@@ -34,6 +36,11 @@ const char *password = creds.password;
 //setting up the potentiometer to dim the LEDs
 #define DIMMER 35
 int brightness;
+
+// non blocking timer variables
+unsigned long currentTime;
+unsigned long previousTime;
+unsigned long NTPinterval = 5000;
 
 //NTP server setup
 const char *ntpServer1 = "pool.ntp.org";
@@ -73,12 +80,13 @@ void timeavailable(struct timeval *t) {
   setCurrentTime();
 };
 
-void getPotInput(){
+int getPotInput(){
   int potRead = analogRead(DIMMER);
   brightness = potRead / 18.2;
+  return brightness;
 
   Serial.println(brightness);
-};
+}
 
 void setup() {
   //disable ESP brownout message
@@ -114,23 +122,29 @@ void setup() {
 }
 
 void loop() {
-  delay(5000); //eventually replace with non blocking code (millis function)
 
-  //check what the NTP server is returning
-  printLocalTime(); 
+  //start timer
+  currentTime = millis();
 
-  //extract data from the most current NTP time and store it in arrays
-  setCurrentTime();
+  //5 sec non blocking timer for grabbing NTP data
+  if((currentTime - previousTime) > NTPinterval){
 
-  //get potentiometer brightness
-  getPotInput();
+    //extract data from the most current NTP time and store it in arrays
+    setCurrentTime(); 
+
+    //check what the NTP server is returning
+    printLocalTime(); 
+
+    //make previous time be the current time
+    previousTime = currentTime;
+  }
 
   //convert arrays to integers
   int hour = atoi(timeHour);
   int minute = atoi(timeMin);
 
   //update LED display with the current time
-  display.updateTime(hour, minute, brightness);
+  display.updateTime(hour, minute, getPotInput());
 
   //return ESP MAC Address
   //Serial.println(WiFi.macAddress());

@@ -35,7 +35,7 @@ void Display::init(){
     pinMode(D4, OUTPUT);
 
     Serial.print("Pins initialized");
-};
+}
 
 void Display::displayDigit(uint8_t column,  int number, int pot_value){
 
@@ -109,8 +109,8 @@ void Display::displayDigit(uint8_t column,  int number, int pot_value){
          analogWrite(pins[column][2], 0);
          analogWrite(pins[column][3], pot_value);
         break;
-    };
-};
+    }
+}
 
 void Display::testLED(u_int8_t ledNum){
 
@@ -118,7 +118,7 @@ void Display::testLED(u_int8_t ledNum){
     delay(200);
     analogWrite(ledNum, 0);
     delay(200);
-};
+}
 
 void Display::booting(){
    testLED(A1);
@@ -139,7 +139,7 @@ void Display::booting(){
    testLED(D4);
 
    delay(1000);
-};
+}
 
 void Display::updateTime(int currHour, int currMin, int pot_value){
 
@@ -160,4 +160,4 @@ void Display::updateTime(int currHour, int currMin, int pot_value){
 
     //set column D
     displayDigit(3, secondMinDigit, pot_value);
-};
+}
