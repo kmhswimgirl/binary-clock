@@ -26,10 +26,14 @@ In order to set up wifi network name and passwords correctly:
 
 3. add header file name to the .gitignore so you do not share your wifi password(s) on GitHub.
 */
+//OLED Display Setup
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
 //creating objects
 wifiPass creds;
-Display display;
+Display clockDisplay;
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 //Wi-fi setup
 const char *ssid = creds.network;
@@ -74,6 +78,7 @@ void setCurrentTime(){
   }
   strftime(timeHour,3, "%H", &timeinfo);
   strftime(timeMin,3, "%M", &timeinfo);
+
 };
 
 // Callback function (gets called when time adjusts via NTP)
@@ -99,7 +104,7 @@ void setup() {
   Serial.begin(115200);
 
   //initialize LED Pins
-  display.init();
+  clockDisplay.init();
 
   Serial.println(WiFi.macAddress());
 
@@ -115,16 +120,29 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
-    display.booting();
+    clockDisplay.booting();
+
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;);
+    }
     Serial.println(WiFi.macAddress());
+
   }
-  Serial.println(" CONNECTED"); //connected to wi-fi, yay!
+  Serial.println(" CONNECTED!"); //connected to wi-fi, yay!
 
   sntp_set_time_sync_notification_cb(timeavailable);
 
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1, ntpServer2);
 
   configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
+
+  //display?
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setTextColor(WHITE, BLACK);
+  display.setCursor(0, 10);
 }
 
 void loop() {
@@ -144,14 +162,11 @@ void loop() {
     //make previous time be the current time
     previousTime = currentTime;
   }
-
+ 
   //convert arrays to integers
   int hour = atoi(timeHour);
   int minute = atoi(timeMin);
 
   //update LED display with the current time
-  display.updateTime(hour, minute, getPotInput());
-
-  //return ESP MAC Address
-  Serial.println(WiFi.macAddress());
+  clockDisplay.updateTime(hour, minute, getPotInput());
 }
