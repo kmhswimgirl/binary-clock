@@ -1,4 +1,4 @@
-#include <arduino.h>
+#include <Arduino.h>
 #include <clock-display.h>
 #include <iostream>
 

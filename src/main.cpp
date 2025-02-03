@@ -6,6 +6,8 @@
 #include <soc/rtc_cntl_reg.h>
 #include <Adafruit_I2CDevice.h>
 #include <SPI.h>
+#include <Adafruit_GFX.h> // general graphics driver
+#include <Adafruit_SSD1306.h> // hardware specific grpahics driver
 
 #include <wifi-creds.h> 
 /*
@@ -13,7 +15,7 @@ In order to set up wifi network name and passwords correctly:
 1. create the header file wifi-creds.h
 2. copy and paste this snippet of code:
 
-  #include <arduino.h>
+  #include <Arduino.h>
 
   class wifiPass{
 
@@ -63,6 +65,7 @@ void printLocalTime() {
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
 };
 
+//gets NTP data and sets variables that are sent to the clock
 void setCurrentTime(){
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
@@ -98,6 +101,8 @@ void setup() {
   //initialize LED Pins
   display.init();
 
+  Serial.println(WiFi.macAddress());
+
   //initalize potentiometer pin (Make sure the Vcc pin is connected to 3v3 on the ESP!!!)
   pinMode(DIMMER, ANALOG);
 
@@ -111,6 +116,7 @@ void setup() {
     delay(500);
     Serial.print(".");
     display.booting();
+    Serial.println(WiFi.macAddress());
   }
   Serial.println(" CONNECTED"); //connected to wi-fi, yay!
 
@@ -147,5 +153,5 @@ void loop() {
   display.updateTime(hour, minute, getPotInput());
 
   //return ESP MAC Address
-  //Serial.println(WiFi.macAddress());
+  Serial.println(WiFi.macAddress());
 }
