@@ -78,7 +78,7 @@ void setCurrentTime(){
   }
   strftime(timeHour,3, "%H", &timeinfo);
   strftime(timeMin,3, "%M", &timeinfo);
-
+  
 };
 
 // Callback function (gets called when time adjusts via NTP)
