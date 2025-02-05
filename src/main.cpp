@@ -93,7 +93,7 @@ int getPotInput(){
   brightness = potRead / 18.2;
   return brightness;
 
-  Serial.println(brightness);
+  //Serial.println(brightness);
 }
 
 void setup() {
@@ -106,7 +106,7 @@ void setup() {
   //initialize LED Pins
   clockDisplay.init();
 
-  Serial.println(WiFi.macAddress());
+  //Serial.println(WiFi.macAddress());
 
   //initalize potentiometer pin (Make sure the Vcc pin is connected to 3v3 on the ESP!!!)
   pinMode(DIMMER, ANALOG);
@@ -122,10 +122,10 @@ void setup() {
     Serial.print(".");
     clockDisplay.booting();
 
-    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;);
-    }
+    // if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    // Serial.println(F("SSD1306 allocation failed"));
+    // for(;;);
+    // }
     Serial.println(WiFi.macAddress());
 
   }
@@ -137,12 +137,7 @@ void setup() {
 
   configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 
-  //display?
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setTextColor(WHITE, BLACK);
-  display.setCursor(0, 10);
+ 
 }
 
 void loop() {
@@ -159,14 +154,17 @@ void loop() {
     //check what the NTP server is returning
     printLocalTime(); 
 
+   
+    //convert arrays to integers
+    int hour = atoi(timeHour);
+    int minute = atoi(timeMin);
+
+    //update LED display with the current time
+    clockDisplay.updateTime(hour, minute, 225);
+
     //make previous time be the current time
-    previousTime = currentTime;
+    previousTime = currentTime; 
   }
  
-  //convert arrays to integers
-  int hour = atoi(timeHour);
-  int minute = atoi(timeMin);
-
-  //update LED display with the current time
-  clockDisplay.updateTime(hour, minute, getPotInput());
+ 
 }
