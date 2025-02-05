@@ -60,6 +60,12 @@ const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3";
 char timeHour[3];
 char timeMin[3];
 
+//arrays for storing display data
+char dayNum[3];
+char weekday[4];
+char monthAbr[4];
+char yearNum[5];
+
 void printLocalTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
@@ -78,6 +84,9 @@ void setCurrentTime(){
   }
   strftime(timeHour,3, "%H", &timeinfo);
   strftime(timeMin,3, "%M", &timeinfo);
+  strftime(dayNum,3,"%d", &timeinfo);
+  strftime(monthAbr,4,"%b", &timeinfo);
+  strftime(yearNum,5,"%Y", &timeinfo);
   
 };
 
@@ -86,6 +95,7 @@ void timeavailable(struct timeval *t) {
   Serial.println("Got time adjustment from NTP!");
   printLocalTime();
   setCurrentTime();
+  
 };
 
 int getPotInput(){
@@ -122,10 +132,10 @@ void setup() {
     Serial.print(".");
     clockDisplay.booting();
 
-    // if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    // Serial.println(F("SSD1306 allocation failed"));
-    // for(;;);
-    // }
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;);
+    }
     Serial.println(WiFi.macAddress());
 
   }
@@ -137,7 +147,6 @@ void setup() {
 
   configTzTime(TZ_America_New_York, ntpServer1, ntpServer2);
 
- 
 }
 
 void loop() {
@@ -153,7 +162,6 @@ void loop() {
 
     //check what the NTP server is returning
     printLocalTime(); 
-
    
     //convert arrays to integers
     int hour = atoi(timeHour);
@@ -165,6 +173,16 @@ void loop() {
     //make previous time be the current time
     previousTime = currentTime; 
   }
- 
- 
+ //if minute and hour == 0, recheck day
+  display.clearDisplay();
+  display.setCursor(0,10);
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setRotation(3);
+  display.write(dayNum);
+  display.setCursor(0,30);
+  display.write(monthAbr);
+  display.setCursor(0,40);
+  display.write(yearNum);
+  display.display();
 }
