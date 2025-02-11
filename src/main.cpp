@@ -26,6 +26,7 @@ In order to set up wifi network name and passwords correctly:
 
 3. add header file name to the .gitignore so you do not share your wifi password(s) on GitHub.
 */
+
 //OLED Display Setup
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -46,7 +47,7 @@ int brightness;
 // non blocking timer variables
 unsigned long currentTime;
 unsigned long previousTime;
-unsigned long NTPinterval = 5000;
+unsigned long NTPinterval = 3000;
 
 //NTP server setup
 const char *ntpServer1 = "pool.ntp.org";
@@ -65,7 +66,7 @@ char dayNum[3];
 char weekday[4];
 char monthAbr[4];
 char yearNum[5];
-
+//-----------------------------------------------------------------
 void printLocalTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
@@ -82,12 +83,15 @@ void setCurrentTime(){
     Serial.println("No time available (yet)");
     return;
   }
+  //to LED clock interface
   strftime(timeHour,3, "%H", &timeinfo);
   strftime(timeMin,3, "%M", &timeinfo);
+
+  // to SSD1306 display
   strftime(dayNum,3,"%d", &timeinfo);
   strftime(monthAbr,4,"%b", &timeinfo);
   strftime(yearNum,5,"%Y", &timeinfo);
-  
+  strftime(weekday,5,"%a", &timeinfo);
 };
 
 // Callback function (gets called when time adjusts via NTP)
@@ -98,6 +102,7 @@ void timeavailable(struct timeval *t) {
   
 };
 
+//gets potentiometer input
 int getPotInput(){
   int potRead = analogRead(DIMMER);
   brightness = potRead / 18.2;
@@ -105,7 +110,26 @@ int getPotInput(){
 
   //Serial.println(brightness);
 }
+//SSD1306 functionality
+void renderDisplay(char * monthDigit, char * dayDigit, char * yearDigit, char * weekDayAbbr){
+  display.clearDisplay();
+  display.setCursor(0,10);
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setRotation(3);
 
+  display.write(dayDigit);
+  display.drawLine(0,20,32,20,WHITE);
+
+  display.setCursor(0,25);
+  display.write(weekDayAbbr);
+  display.drawLine(0,35,32,35,WHITE);
+
+  display.setCursor(0,40);
+  display.write(yearDigit);
+}
+
+//-----------------------------------------------------------------
 void setup() {
   //disable ESP brownout message
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
@@ -173,16 +197,7 @@ void loop() {
     //make previous time be the current time
     previousTime = currentTime; 
   }
- //if minute and hour == 0, recheck day
-  display.clearDisplay();
-  display.setCursor(0,10);
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setRotation(3);
-  display.write(dayNum);
-  display.setCursor(0,30);
-  display.write(monthAbr);
-  display.setCursor(0,40);
-  display.write(yearNum);
+ //if minute and hour == 0, recheck day... need to add
+  renderDisplay(monthAbr, dayNum, yearNum, weekday);
   display.display();
 }

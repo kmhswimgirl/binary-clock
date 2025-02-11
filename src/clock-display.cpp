@@ -161,3 +161,25 @@ void Display::updateTime(int currHour, int currMin, int pot_value){
     //set column D
     displayDigit(3, secondMinDigit, pot_value);
 }
+
+void Display:: allOn(){
+    analogWrite(pins[0][0], 225);
+    analogWrite(pins[0][1], 225);
+    analogWrite(pins[0][2], 225);
+    analogWrite(pins[0][3], 225);
+
+    analogWrite(pins[1][0], 225);
+    analogWrite(pins[1][1], 225);
+    analogWrite(pins[1][2], 225);
+    analogWrite(pins[1][3], 225);
+
+    analogWrite(pins[2][0], 225);
+    analogWrite(pins[2][1], 225);
+    analogWrite(pins[2][2], 225);
+    analogWrite(pins[2][3], 225);
+
+    analogWrite(pins[3][0], 225);
+    analogWrite(pins[3][1], 225);
+    analogWrite(pins[3][2], 225);
+    analogWrite(pins[3][3], 225);
+}

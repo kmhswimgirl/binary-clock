@@ -49,6 +49,9 @@ class Display{
         @param currMin the current minute as an integer
     */
     void updateTime(int currHour, int currMin, int pot_value);
+
+    //turns every LED on
+    void allOn();
 };
 
 #endif
