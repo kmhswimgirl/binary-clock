@@ -35,89 +35,88 @@ void Display::init(){
     pinMode(D4, OUTPUT);
 
     Serial.print("Pins initialized");
-
 };
 
-void Display::displayDigit(uint8_t column,  int number){
+void Display::displayDigit(uint8_t column,  int number, int pot_value){
 
     switch(number){
         case 0: 
-         digitalWrite(pins[column][0], LOW);
-         digitalWrite(pins[column][1], LOW);
-         digitalWrite(pins[column][2], LOW);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], 0);
+         analogWrite(pins[column][1], 0);
+         analogWrite(pins[column][2], 0);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 1: 
-         digitalWrite(pins[column][0], HIGH);
-         digitalWrite(pins[column][1], LOW);
-         digitalWrite(pins[column][2], LOW);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], pot_value);
+         analogWrite(pins[column][1], 0);
+         analogWrite(pins[column][2], 0);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 2:
-         digitalWrite(pins[column][0], LOW);
-         digitalWrite(pins[column][1], HIGH);
-         digitalWrite(pins[column][2], LOW);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], 0);
+         analogWrite(pins[column][1], pot_value);
+         analogWrite(pins[column][2], 0);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 3:
-         digitalWrite(pins[column][0], HIGH);
-         digitalWrite(pins[column][1], HIGH);
-         digitalWrite(pins[column][2], LOW);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], pot_value);
+         analogWrite(pins[column][1], pot_value);
+         analogWrite(pins[column][2], 0);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 4:
-         digitalWrite(pins[column][0], LOW);
-         digitalWrite(pins[column][1], LOW);
-         digitalWrite(pins[column][2], HIGH);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], 0);
+         analogWrite(pins[column][1], 0);
+         analogWrite(pins[column][2], pot_value);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 5:
-         digitalWrite(pins[column][0], HIGH);
-         digitalWrite(pins[column][1], LOW);
-         digitalWrite(pins[column][2], HIGH);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], pot_value);
+         analogWrite(pins[column][1], 0);
+         analogWrite(pins[column][2], pot_value);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 6:
-         digitalWrite(pins[column][0], LOW);
-         digitalWrite(pins[column][1], HIGH);
-         digitalWrite(pins[column][2], HIGH);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], 0);
+         analogWrite(pins[column][1], pot_value);
+         analogWrite(pins[column][2], pot_value);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 7:
-         digitalWrite(pins[column][0], HIGH);
-         digitalWrite(pins[column][1], HIGH);
-         digitalWrite(pins[column][2], HIGH);
-         digitalWrite(pins[column][3], LOW);
+         analogWrite(pins[column][0], pot_value);
+         analogWrite(pins[column][1], pot_value);
+         analogWrite(pins[column][2], pot_value);
+         analogWrite(pins[column][3], 0);
         break;
 
         case 8: 
-         digitalWrite(pins[column][0], LOW);
-         digitalWrite(pins[column][1], LOW);
-         digitalWrite(pins[column][2], LOW);
-         digitalWrite(pins[column][3], HIGH);
+         analogWrite(pins[column][0], 0);
+         analogWrite(pins[column][1], 0);
+         analogWrite(pins[column][2], 0);
+         analogWrite(pins[column][3], pot_value);
         break;
 
         case 9: 
-         digitalWrite(pins[column][0], HIGH);
-         digitalWrite(pins[column][1], LOW);
-         digitalWrite(pins[column][2], LOW);
-         digitalWrite(pins[column][3], HIGH);
+         analogWrite(pins[column][0], pot_value);
+         analogWrite(pins[column][1], 0);
+         analogWrite(pins[column][2], 0);
+         analogWrite(pins[column][3], pot_value);
         break;
     };
 };
 
 void Display::testLED(u_int8_t ledNum){
 
-    digitalWrite(ledNum, HIGH);
+    analogWrite(ledNum, 255);
     delay(200);
-    digitalWrite(ledNum, LOW);
+    analogWrite(ledNum, 0);
     delay(200);
 };
 
@@ -142,7 +141,7 @@ void Display::booting(){
    delay(1000);
 };
 
-void Display::updateTime(int currHour, int currMin){
+void Display::updateTime(int currHour, int currMin, int pot_value){
 
     //calculate values to be displayed
     int firstHourDigit = currHour / 10;
@@ -151,14 +150,14 @@ void Display::updateTime(int currHour, int currMin){
     int secondMinDigit = currMin % 10;
 
     //set column A
-    displayDigit(0,firstHourDigit);
+    displayDigit(0,firstHourDigit, pot_value);
 
     //set column B
-    displayDigit(1,secondHourDigit);
+    displayDigit(1,secondHourDigit, pot_value);
 
     //set column C
-    displayDigit(2, firstMinDigit);
+    displayDigit(2, firstMinDigit, pot_value);
 
     //set column D
-    displayDigit(3, secondMinDigit);
+    displayDigit(3, secondMinDigit, pot_value);
 };
