@@ -31,7 +31,7 @@ Basic Working LED binary clock with no additional features.
 - can automatically reconnect to wi-fi if disconnected
 
 ### Wiring Schematic (main protoboard only):
-<img width="700" alt="Screenshot 2024-12-24 at 02 27 55" src="https://github.com/user-attachments/assets/972d5872-cb4c-4f9f-9be7-d79a7f309d89" />
+<img width="700" alt="initial KiCad design" src="https://github.com/user-attachments/assets/972d5872-cb4c-4f9f-9be7-d79a7f309d89" />
 <br/>
 Note: each LED has a 220 ohm resistor connected to it, which will later be increased to further dim the LEDs as they are very bright at the moment. I also used this for some PCB/ KiCad practice
 
@@ -44,9 +44,12 @@ Added non-blocking timer, updated KiCad schematics, began thinking about buildin
   - timer is now non blocking
   - added OLED display in order to show current date and day of the week
   - refactored code in order to accommodate auto dimming by using analog pwm signals instead of digital ones
+
     
 ### KiCad Schematic:
-Note: Schematic has been updated to include resistors, still only hsows the main board wiring, but will soon include all elements of the design
+<img width="700" alt="KiCad schematic with resistors" src="https://github.com/user-attachments/assets/db3af4e5-d0d9-4c55-877c-877dbd50886a" />
+<br/>
+Note: Schematic has been updated to include resistors, still only shows the main board wiring, but will soon include all elements of the design
 
 
 
